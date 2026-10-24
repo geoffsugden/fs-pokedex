@@ -1,7 +1,7 @@
 const js = require('@eslint/js')
 const react = require('eslint-plugin-react')
 const jest = require('eslint-plugin-jest')
-const globals = require('globals')
+import globals from ('globals')
 
 module.exports = [
   {
