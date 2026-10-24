@@ -31,9 +31,20 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
-          name: platwright-report
+          name: playwright-report
           path: playwright-report
           retention-days: 30
       - name: Trigger deployment
         if: ${{ github.event_name == 'push'}}
         run: curl ${{ secrets.RENDER_DEPLOY_HOOK }}
+  tag_release:
+    needs: [simple_deployment_pipeline]
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'push' }}
+    steps:
+      - name: Bump version and push tag
+        uses: anothrNick/github-tag-action@1.75.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG_PREFIX: v
+          DEFAULT_BUMP: patch
