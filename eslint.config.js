@@ -30,7 +30,16 @@ module.exports = [
     },
   },
   {
-    files: ['jest.setup.js'],
+    files: ['e2e-tests/**/*.js'],
+    languageOptions: {
+      sourceType: 'commonjs',
+      globals: {
+        ...globals.node,
+      },
+    },
+  },
+  {
+    files: ['jest.setup.js', 'playwright.config.js'],
     languageOptions: {
       globals: {
         ...globals.node,
