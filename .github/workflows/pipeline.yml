@@ -31,7 +31,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
-          name: platwright-report
+          name: playwright-report
           path: playwright-report
           retention-days: 30
       - name: Trigger deployment
@@ -47,4 +47,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TAG_PREFIX: v
-          DEFAULT_BUMP:
+          DEFAULT_BUMP: patch
