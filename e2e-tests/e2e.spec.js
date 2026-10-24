@@ -12,4 +12,8 @@ describe('Pokedex', () => {
     await expect(page.getByText('chlorophyll')).toBeVisible()
     await expect(page.getByText('Pokémon and Pokémon character names are trademarks of Nintendo.')).toBeVisible()
   })
+  test('healthcheck to confirm page operational', async ({ page }) => {
+    await page.goto('/health')
+    await expect(page.getByText('ok')).toBeVisible()
+  })
 })
