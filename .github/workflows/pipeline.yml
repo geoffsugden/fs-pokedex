@@ -66,4 +66,4 @@ jobs:
       - name: Notify Failure
         uses: sarisia/actions-status-discord@v1
         with:
-          webhook: FSO_DISCORD_WEBHOOK
+          webhook: secrets.FSO_DISCORD_WEBHOOK
