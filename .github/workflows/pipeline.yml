@@ -82,7 +82,7 @@ jobs:
             Repository ${{ github.repository }} 
             Branch: ${{ github.ref_name }} 
             Commit: ${{ github.sha }} 
-            Message: ${{ github.event.head_commit.message }} || ${{ github.event.pull_request.title }}
+            Message: ${{ github.event.head_commit.message || github.event.pull_request.title }}
             Author: ${{ github.actor }} 
             Workflow ${{ github.workflow }} 
             Job: simple_deployment_pipeline
