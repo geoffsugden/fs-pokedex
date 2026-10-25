@@ -67,7 +67,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TAG_PREFIX: v
           DEFAULT_BUMP: patch
-  notify_discord:
+  notify_failure:
     needs: [build_and_test]
     runs-on: ubuntu-latest
     if: ${{ always() && needs.build_and_test.result == 'failure' }}
