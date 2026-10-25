@@ -62,7 +62,7 @@ jobs:
   notify_discord:
     needs: [simple_deployment_pipeline]
     runs-on: ubuntu-latest
-    if: ${{ needs.simple_deployment_pipeline.result == 'failure' }}
+    if: ${{ always() && needs.simple_deployment_pipeline.result == 'failure' }}
     steps:
       - name: Notify Failure
         uses: sarisia/actions-status-discord@v1
