@@ -40,7 +40,7 @@ jobs:
       - name: Notify Success
         uses: sarisia/actions-status-discord@v1
         with:
-          webhook: FSO_DISCORD_WEBHOOK
+          webhook: ${{ secrets.FSO_DISCORD_WEBHOOK }}
   tag_release:
     needs: [simple_deployment_pipeline]
     runs-on: ubuntu-latest
@@ -66,4 +66,4 @@ jobs:
       - name: Notify Failure
         uses: sarisia/actions-status-discord@v1
         with:
-          webhook: secrets.FSO_DISCORD_WEBHOOK
+          webhook: ${{ secrets.FSO_DISCORD_WEBHOOK }}
