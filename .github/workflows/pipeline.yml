@@ -41,7 +41,7 @@ jobs:
         if: ${{ github.event_name == 'push' && !contains(github.event.head_commit.message, '#skip')}}
         uses: sarisia/actions-status-discord@v1
         with:
-          webhook: ${{ secrets.FSO_DISCORD_WEBHOOK }}
+          webhook: ${{ secrets.PERSONAL_DISCORD_WEBHOOK }}
   tag_release:
     needs: [simple_deployment_pipeline]
     runs-on: ubuntu-latest
@@ -62,9 +62,19 @@ jobs:
   notify_discord:
     needs: [simple_deployment_pipeline]
     runs-on: ubuntu-latest
-    if: ${{ needs.test.result == 'failure' }}
+    if: ${{ always() && needs.simple_deployment_pipeline.result == 'failure' }}
     steps:
       - name: Notify Failure
         uses: sarisia/actions-status-discord@v1
         with:
-          webhook: ${{ secrets.FSO_DISCORD_WEBHOOK }}
+          webhook: ${{ secrets.PERSONAL_DISCORD_WEBHOOK }}
+          status: Failure
+          title: 'Failure Details'
+          description: |
+            Repository ${{ github.repository }} 
+            Branch: ${{ github.ref_name }} 
+            Commit: ${{ github.sha }} 
+            Message: ${{ github.event.head_commit.message }} || ${{ github.event.pull_request.title }}
+            Author: ${{ github.actor }} 
+            Workflow ${{ github.workflow }} 
+            Job: simple_deployment_pipeline
