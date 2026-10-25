@@ -1,0 +1,28 @@
+name: Periodic Health Check
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '*/15 * * * *'
+
+jobs:
+  health_check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: ping_server
+        uses: jtalk/url-health-check-action@v5
+        with:
+          url: ${{ secrets.POKEDEX_URL }}
+  notify_failure:
+    needs: [health_check]
+    runs-on: ubuntu-latest
+    if: ${{ always() && needs.health_check.result == 'failure' }}
+    steps:
+      - name: Notify Failure
+        uses: sarisia/actions-status-discord@v1
+        with:
+          webhook: ${{ secrets.PERSONAL_DISCORD_WEBHOOK }}
+          status: Failure
+          title: 'Failure Details'
+          description: |
+            Message: "Health Check Failed"
