@@ -38,9 +38,10 @@ jobs:
         if: ${{ github.event_name == 'push' && !contains(github.event.head_commit.message, '#skip')}}
         run: curl ${{ secrets.RENDER_DEPLOY_HOOK }}
       - name: Notify Success
+        if: ${{ github.event_name == 'push' && !contains(github.event.head_commit.message, '#skip')}}
         uses: sarisia/actions-status-discord@v1
         with:
-          webhook: FSO_DISCORD_WEBHOOK
+          webhook: ${{ secrets.FSO_DISCORD_WEBHOOK }}
   tag_release:
     needs: [simple_deployment_pipeline]
     runs-on: ubuntu-latest
@@ -66,4 +67,4 @@ jobs:
       - name: Notify Failure
         uses: sarisia/actions-status-discord@v1
         with:
-          webhook: FSO_DISCORD_WEBHOOK
+          webhook: ${{ secrets.FSO_DISCORD_WEBHOOK }}
