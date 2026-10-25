@@ -9,7 +9,7 @@ on:
     types: [opened, synchronize]
 
 jobs:
-  simple_deployment_pipeline:
+  build_and_test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
@@ -34,16 +34,24 @@ jobs:
           name: playwright-report
           path: playwright-report
           retention-days: 30
+  deploy:
+    needs: [build_and_test]
+    runs-on: ubuntu-latest
+    steps:
       - name: Trigger deployment
         if: ${{ github.event_name == 'push' && !contains(github.event.head_commit.message, '#skip')}}
         run: curl ${{ secrets.RENDER_DEPLOY_HOOK }}
+  notify_success:
+    needs: [deploy]
+    runs-on: ubuntu-latest
+    steps:
       - name: Notify Success
         if: ${{ github.event_name == 'push' && !contains(github.event.head_commit.message, '#skip')}}
         uses: sarisia/actions-status-discord@v1
         with:
           webhook: ${{ secrets.PERSONAL_DISCORD_WEBHOOK }}
   tag_release:
-    needs: [simple_deployment_pipeline]
+    needs: [deploy]
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -60,9 +68,9 @@ jobs:
           TAG_PREFIX: v
           DEFAULT_BUMP: patch
   notify_discord:
-    needs: [simple_deployment_pipeline]
+    needs: [build_and_test]
     runs-on: ubuntu-latest
-    if: ${{ always() && needs.simple_deployment_pipeline.result == 'failure' }}
+    if: ${{ always() && needs.build_and_test.result == 'failure' }}
     steps:
       - name: Notify Failure
         uses: sarisia/actions-status-discord@v1
